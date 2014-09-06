@@ -21,6 +21,8 @@ import com.google.common.base.Objects;
  * 
  * @author mitchell
  */
+// Added 3 annotations:  @Entity, @Id, @GeneratedValue for persistence
+//
 @Entity
 public class Video {
 	@Id
