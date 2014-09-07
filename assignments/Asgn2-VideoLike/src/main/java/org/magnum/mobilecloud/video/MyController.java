@@ -58,72 +58,15 @@ public class MyController {
 	
 	@Autowired
 	private VideoRepository videos;
-	
-//	methods used in Assignment 1 superceded by JPA implementation
-//	
-//	// An in-memory database (HashMap object) that the servlet uses to store the
-//	// videos that are sent to it by clients
-//
-//	// One way to generate a unique ID for each video is to use an AtomicLong:
-//	private static final AtomicLong currentId = new AtomicLong(0L);
-//	
-//	// Create database object for videos
-//	private Map<Long,Video> videos = new HashMap<Long, Video>();
-//
-//	// Method for saving video to database
-//	public Video save(Video entity) {
-//		checkAndSetId(entity);
-//		videos.put(entity.getId(), entity);
-//		return entity;
-//	}
-//	// Method to check if ID exists, if not generate one
-//	private void checkAndSetId(Video entity) {
-//		if(entity.getId() == 0){
-//			entity.setId(currentId.incrementAndGet());
-//		}
-//	}
-//
-	// Method to generate a data url for a video
-	private String createDataUrl(long videoId){
-		String url = getUrlBaseForLocalServer() + "/video/" + videoId + "/data";
-		return url;
-	}
-	//	Figure out the address of your server 
-	private String getUrlBaseForLocalServer() {
-		HttpServletRequest request = 
-				((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		String base = 
-				"http://"+request.getServerName() 
-				+ ((request.getServerPort() != 80) ? ":"+request.getServerPort() : "");
-		return base;
-	}
-	
-	
-//	methods used in Assignment 1 superceded by JPA implementation
-//
+		
 	// Controller METHOD1 - Receives GET requests to VIDEO_SVC_PATH
 	// and returns the current list of videos in memory. Spring automatically converts
 	// the list of videos to JSON because of the @ResponseBody
 	// annotation.
-//	@RequestMapping(value=VIDEO_SVC_PATH, method=RequestMethod.GET)
-//	public @ResponseBody Collection<Video> getVideoList(){
-//		return videos.values();
-//	}
-	
-	// Receives GET requests to /video and returns the current
-		// list of videos in memory. Spring automatically converts
-		// the list of videos to JSON because of the @ResponseBody
-		// annotation.
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.GET)
 	public @ResponseBody Collection<Video> getVideoList(){
 		return Lists.newArrayList(videos.findAll());
 	}
-	
-//	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.GET)
-//	public @ResponseBody Collection<Video> getVideoList(){
-//		return (Collection<Video>) videos.findAll();
-//	}
-	
 	
 	// Receives GET requests to /video/find and returns all Videos
 	// that have a title (e.g., Video.name) matching the "title" request
@@ -174,13 +117,29 @@ public class MyController {
 	
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.POST)
 	public @ResponseBody Video addVideo(@RequestBody Video v){
-		// add dataUrl to object so client can upload file here
-		v.setUrl(createDataUrl(v.getId()));	
+		Video vhandle = videos.save(v);
+		// use returned instance from save() to get assigned ID
+		// then add dataUrl to object so client can upload file here	
+		v.setUrl(createDataUrl(vhandle.getId()));			
+		// update repository with URL
 		videos.save(v);
-
-		//		System.out.println(v.getUrl());
 		return v;
 	}	
+	
+	// Method to generate a data url for a video
+	private String createDataUrl(long videoId){
+		String url = getUrlBaseForLocalServer() + "/video/" + videoId + "/data";
+		return url;
+	}
+	//	Figure out the address of your server 
+	private String getUrlBaseForLocalServer() {
+		HttpServletRequest request = 
+				((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String base = 
+				"http://"+request.getServerName() 
+				+ ((request.getServerPort() != 80) ? ":"+request.getServerPort() : "");
+		return base;
+	}
 	
 //	// Controller METHOD3 - Receives POST requests
 //	// to save client's video data to a file on the server
