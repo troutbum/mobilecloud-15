@@ -174,10 +174,11 @@ public class MyController {
 	
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.POST)
 	public @ResponseBody Video addVideo(@RequestBody Video v){
-		videos.save(v);
 		// add dataUrl to object so client can upload file here
 		v.setUrl(createDataUrl(v.getId()));	
-//		System.out.println(v.getUrl());
+		videos.save(v);
+
+		//		System.out.println(v.getUrl());
 		return v;
 	}	
 	
