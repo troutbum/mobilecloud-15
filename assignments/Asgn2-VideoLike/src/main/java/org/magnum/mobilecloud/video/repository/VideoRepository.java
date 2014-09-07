@@ -18,4 +18,7 @@ public interface VideoRepository extends CrudRepository<Video, Long>{
 	// Find all videos with a matching title (e.g., Video.name)
 	public Collection<Video> findByName(String title);
 	
+	// Find all videos
+	public Collection<Video> findAll();
+	
 }

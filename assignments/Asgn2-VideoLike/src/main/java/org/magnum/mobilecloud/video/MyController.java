@@ -31,6 +31,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -115,6 +116,25 @@ public class MyController {
 		return Lists.newArrayList(videos.findAll());
 	}
 	
+//	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.GET)
+//	public @ResponseBody Collection<Video> getVideoList(){
+//		return (Collection<Video>) videos.findAll();
+//	}
+	
+	
+	// Receives GET requests to /video/find and returns all Videos
+	// that have a title (e.g., Video.name) matching the "title" request
+	// parameter value that is passed by the client
+	@RequestMapping(value=VideoSvcApi.VIDEO_TITLE_SEARCH_PATH, method=RequestMethod.GET)
+	public @ResponseBody Collection<Video> findByTitle(
+			// Tell Spring to use the "title" parameter in the HTTP request's query
+			// string as the value for the title method parameter
+			@RequestParam(value=VideoSvcApi.TITLE_PARAMETER) String title
+			){
+		return videos.findByName(title);
+	}
+	
+	
 	// Controller METHOD2 - Receives POST requests to /video and converts the HTTP
 	// request body, which should contain json, into a Video
 	// object before adding it to the list. The @RequestBody
@@ -136,11 +156,12 @@ public class MyController {
 //	}
 	
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.POST)
-	public @ResponseBody boolean addVideo(@RequestBody Video v){
+	public @ResponseBody Video addVideo(@RequestBody Video v){
 		videos.save(v);
 		// add dataUrl to object so client can upload file here
 		v.setUrl(createDataUrl(v.getId()));	
-		return true;
+//		System.out.println(v.getUrl());
+		return v;
 	}	
 	
 //	// Controller METHOD3 - Receives POST requests
