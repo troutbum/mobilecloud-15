@@ -20,6 +20,8 @@ package org.magnum.mobilecloud.video;
 
 import java.util.Collection;
 
+import javassist.NotFoundException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.magnum.mobilecloud.video.client.VideoSvcApi;
@@ -28,6 +30,7 @@ import org.magnum.mobilecloud.video.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -134,6 +137,20 @@ public class MyController {
 		return videos.findByName(title);
 	}
 	
+	// Get video metadata by id
+	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH + "/{id}", method = RequestMethod.GET)
+	public @ResponseBody Video getVideoById(@PathVariable("id") long id) {
+		Video v = videos.findOne(id);
+		if (v == null) {
+			try {
+				throw new NotFoundException("video not found for id: " + id);
+			} catch (NotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return v;
+	}
 	
 	// Controller METHOD2 - Receives POST requests to /video and converts the HTTP
 	// request body, which should contain json, into a Video

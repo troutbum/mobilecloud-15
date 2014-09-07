@@ -54,8 +54,11 @@ dependencies {
 //   compile("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
 //   compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.RC2")
 //   compile("org.springframework.security.oauth:spring-security-oauth2-javaconfig:1.0.0.M1")
-    
-    compile("org.hsqldb:hsqldb")
+   
+//	Switch database to the Example 5 JPA example (persists into file system)  
+//    compile("org.hsqldb:hsqldb")
+    compile("jdbc:jdbc:2.0")
+    compile("com.h2database:h2")
     
     compile("com.google.guava:guava:17.0")
     compile("org.apache.commons:commons-lang3:3.3.2")
