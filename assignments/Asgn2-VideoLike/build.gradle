@@ -51,9 +51,9 @@ dependencies {
 //
 //  Comment out security to simplify testing of logic and persistence
 //    
-//   compile("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
-//   compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.RC2")
-//   compile("org.springframework.security.oauth:spring-security-oauth2-javaconfig:1.0.0.M1")
+   compile("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+   compile("org.springframework.security.oauth:spring-security-oauth2:2.0.0.RC2")
+   compile("org.springframework.security.oauth:spring-security-oauth2-javaconfig:1.0.0.M1")
    
 //	Switch database to the Example 5 JPA example (persists into file system)  
 //    compile("org.hsqldb:hsqldb")
