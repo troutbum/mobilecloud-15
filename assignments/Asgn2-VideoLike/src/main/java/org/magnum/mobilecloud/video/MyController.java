@@ -61,8 +61,9 @@ public class MyController {
 	@Autowired
 	private VideoRepository videos;
 		
-	// Controller METHOD: GET /video - GET requests to VIDEO_SVC_PATH
-	// and returns the current list of videos in memory. Spring automatically converts
+	// GET /video 
+	// Requests to VIDEO_SVC_PATH and returns the current list of 
+	// videos in memory. Spring automatically converts
 	// the list of videos to JSON because of the @ResponseBody
 	// annotation.
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.GET)
@@ -70,9 +71,11 @@ public class MyController {
 		return Lists.newArrayList(videos.findAll());
 	}
 	
-	// Receives GET requests to /video/find and returns all Videos
+	// GET /video/search/findByName?title={title}
+	// Requests to /video/find and returns all Videos
 	// that have a title (e.g., Video.name) matching the "title" request
-	// parameter value that is passed by the client
+	// parameter value that is passed by the client or an empty
+	// list if none are found.
 	@RequestMapping(value=VideoSvcApi.VIDEO_TITLE_SEARCH_PATH, method=RequestMethod.GET)
 	public @ResponseBody Collection<Video> findByTitle(
 			// Tell Spring to use the "title" parameter in the HTTP request's query
@@ -82,8 +85,20 @@ public class MyController {
 		return videos.findByName(title);
 	}
 	
-//  Controller METHOD: GET /video/{id} - GET requests with path variable {id}
-//	to serve up video metadata from the server	
+	// GET /video/search/findByDurationLessThan?duration={duration}
+	// Returns a list of videos whose durations are less than the given parameter 
+	// or an empty list if none are found.
+	@RequestMapping(value=VideoSvcApi.VIDEO_DURATION_SEARCH_PATH, method=RequestMethod.GET)
+	public @ResponseBody Collection<Video> findByDuration(
+			// Tell Spring to use the "duration" parameter in the HTTP request's query
+			// string as the value for the duration method parameter
+			@RequestParam(value=VideoSvcApi.DURATION_PARAMETER) long maxduration
+			){
+		return videos.findByDurationLessThan(maxduration);
+	}
+		
+	// GET /video/{id}
+	// GET requests with path variable {id} to serve up video metadata from the server	
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH + "/{id}", method = RequestMethod.GET)
 	public @ResponseBody Video getVideoById(
 			@PathVariable("id") long id,
@@ -101,8 +116,8 @@ public class MyController {
 		return videos.findOne(id);
 	}	
 	
-	// Controller METHOD: POST /video - POST requests to VIDEO_SVC_PATH
-	// converts the HTTP request body, which should contain JSON, 
+	// POST /video 
+	// Requests to VIDEO_SVC_PATH converts the HTTP request body, which should contain JSON, 
 	// into a Video object before adding it repository. The @RequestBody
 	// annotation on the Video parameter is what tells Spring
 	// to interpret the HTTP request body as JSON and convert
@@ -122,7 +137,7 @@ public class MyController {
 		return v;
 	}	
 	
-	// Method to generate a data url for a video
+	// Method to generate a data URL to store a video
 	private String createDataUrl(long videoId){
 		String url = getUrlBaseForLocalServer() + "/video/" + videoId + "/data";
 		return url;
