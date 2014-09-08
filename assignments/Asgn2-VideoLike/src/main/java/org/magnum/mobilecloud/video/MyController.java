@@ -18,11 +18,13 @@
 
 package org.magnum.mobilecloud.video;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import javassist.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.magnum.mobilecloud.video.client.VideoSvcApi;
 import org.magnum.mobilecloud.video.repository.Video;
@@ -59,7 +61,7 @@ public class MyController {
 	@Autowired
 	private VideoRepository videos;
 		
-	// Controller METHOD1 - Receives GET requests to VIDEO_SVC_PATH
+	// Controller METHOD: GET /video - GET requests to VIDEO_SVC_PATH
 	// and returns the current list of videos in memory. Spring automatically converts
 	// the list of videos to JSON because of the @ResponseBody
 	// annotation.
@@ -80,40 +82,34 @@ public class MyController {
 		return videos.findByName(title);
 	}
 	
-	// Get video metadata by id
+//  Controller METHOD: GET /video/{id} - GET requests with path variable {id}
+//	to serve up video metadata from the server	
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH + "/{id}", method = RequestMethod.GET)
-	public @ResponseBody Video getVideoById(@PathVariable("id") long id) {
+	public @ResponseBody Video getVideoById(
+			@PathVariable("id") long id,
+			HttpServletResponse response) {
+
 		Video v = videos.findOne(id);
 		if (v == null) {
 			try {
-				throw new NotFoundException("video not found for id: " + id);
-			} catch (NotFoundException e) {
+				response.sendError(404);
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return v;
-	}
+		return videos.findOne(id);
+	}	
 	
-	// Controller METHOD2 - Receives POST requests to /video and converts the HTTP
-	// request body, which should contain json, into a Video
-	// object before adding it to the list. The @RequestBody
+	// Controller METHOD: POST /video - POST requests to VIDEO_SVC_PATH
+	// converts the HTTP request body, which should contain JSON, 
+	// into a Video object before adding it repository. The @RequestBody
 	// annotation on the Video parameter is what tells Spring
 	// to interpret the HTTP request body as JSON and convert
 	// it into a Video object to pass into the method. The
 	// @ResponseBody annotation tells Spring to convert the
 	// return value from the method back into JSON and put
 	// it into the body of the HTTP response to the client.
-
-//	methods used in Assignment 1 superceded by JPA implementation
-//	
-//	@RequestMapping(value=VIDEO_SVC_PATH, method=RequestMethod.POST)
-//	public @ResponseBody Video addVideo(@RequestBody Video v){
-//		save(v);
-//		// add dataUrl to object so client can upload file here
-//		v.setDataUrl(createDataUrl(v.getId()));	
-//		return v;
-//	}
 	
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.POST)
 	public @ResponseBody Video addVideo(@RequestBody Video v){
