@@ -188,7 +188,33 @@ public class MyController {
 //	POST /video/{id}/unlike
 //	Allows a user to unlike a video that he/she previously liked. Returns 200 OK on success, 
 //	404 if the video is not found, and a 400 if the user has not previously liked the specified video.
+	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH + "/{id}/unlike", method = RequestMethod.POST)
+	public ResponseEntity<Void> unlikeVideo(
+			@PathVariable("id") long id,
+			Principal p) {
 
+		// Check if id exists in repository
+		if (videos.exists(id) == false) {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+		
+		// Get username of current login account
+		String username = p.getName();					
+		Video v = videos.findOne(id);
+		List<String> likesUsernames = v.getLikesUsernames();  
+		
+		// Checks if the user has not previously liked the video (returns 400 Bad Request)
+		if (!likesUsernames.contains(username)) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		} 
+		
+		// keep track of users have liked a video
+		likesUsernames.remove(username);
+		v.setLikesUsernames(likesUsernames);
+		v.setLikes(likesUsernames.size());
+		videos.save(v);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 	
 	
 	
