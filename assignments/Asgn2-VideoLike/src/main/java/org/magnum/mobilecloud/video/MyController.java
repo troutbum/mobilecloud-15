@@ -184,29 +184,13 @@ public class MyController {
 		videos.save(v);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}		
-
-//	@RequestMapping(value = URL_VIDEOS_VIDEO_LIKE, method = RequestMethod.POST)
-//	 public ResponseEntity<Void> likeVideo (
-//	   @PathVariable(PARAMETER_VIDEO_ID) long id, Principal p) {  
-//	  if (!....exists(id)){
-//	   return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-//	  }
-//	  String username = p.getName(); 
-//	  Video v = ....findOne(id);
-//	  Set<String> likesUsernames = v.getLikesUsernames();  
-//	  // Checks if the user has already liked the video.
-//	  if (....contains(username)) {
-//	   return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-//	  } 
-//	  // keep track of users have liked a video
-//	        ... 
-//	  return new ResponseEntity<Void>(HttpStatus.OK);
-//	 }
 	
 //	POST /video/{id}/unlike
 //	Allows a user to unlike a video that he/she previously liked. Returns 200 OK on success, 
 //	404 if the video is not found, and a 400 if the user has not previously liked the specified video.
 
+	
+	
 	
 //	GET /video/{id}/likedby
 //	Returns a list of the string usernames of the users that have liked the specified video. If the video is not found, a 404 error should be generated.	
