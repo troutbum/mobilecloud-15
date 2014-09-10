@@ -21,9 +21,7 @@ package org.magnum.mobilecloud.video;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
-
-import javassist.NotFoundException;
-
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,7 +29,6 @@ import org.magnum.mobilecloud.video.client.VideoSvcApi;
 import org.magnum.mobilecloud.video.repository.Video;
 import org.magnum.mobilecloud.video.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -173,7 +170,7 @@ public class MyController {
 		// Get username of current login account
 		String username = p.getName();					
 		Video v = videos.findOne(id);
-		Set<String> likesUsernames = v.getLikesUsernames();  
+		List<String> likesUsernames = v.getLikesUsernames();  
 		
 		// Checks if the user has already liked the video (returns 400 Bad Request)
 		if (likesUsernames.contains(username)) {
@@ -181,7 +178,9 @@ public class MyController {
 		} 
 		
 		// keep track of users have liked a video
-		v.setLikedBy(username);
+		likesUsernames.add(username);
+		v.setLikesUsernames(likesUsernames);
+		v.setLikes(likesUsernames.size());
 		videos.save(v);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}		

@@ -1,5 +1,8 @@
 package org.magnum.mobilecloud.video.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +25,7 @@ import com.google.common.base.Objects;
  * @author mitchell
  */
 // Added 3 annotations:  @Entity, @Id, @GeneratedValue for persistence
+// Also added @ElementCollection to store a "LikedByUsername" db table
 //
 @Entity
 public class Video {
@@ -33,6 +37,18 @@ public class Video {
 	private String url;
 	private long duration;
 	private long likes;
+	
+	@ElementCollection 
+	private List<String> likesUsernames = new ArrayList<String>(); 
+
+	public List<String> getLikesUsernames() {
+	  return likesUsernames;
+	 }
+
+	public void setLikesUsernames(List<String> likesUsernames) {
+	  this.likesUsernames = likesUsernames;
+	}
+
 	
 	public Video() {
 	}
