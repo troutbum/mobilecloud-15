@@ -19,6 +19,7 @@
 package org.magnum.mobilecloud.video;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Collection;
 
 import javassist.NotFoundException;
@@ -31,6 +32,8 @@ import org.magnum.mobilecloud.video.repository.Video;
 import org.magnum.mobilecloud.video.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -151,6 +154,65 @@ public class MyController {
 				+ ((request.getServerPort() != 80) ? ":"+request.getServerPort() : "");
 		return base;
 	}
+	
+//	POST /video/{id}/like
+//	Allows a user to like a video. Returns 200 Ok on success, 404 if the video is not found, 
+//	or 400 if the user has already liked the video.
+//	The service should should keep track of which users have liked a video and prevent a user from liking a video twice. 
+//  If a user tries to like a video a second time, the operation should fail and return 400 Bad Request.
+	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH + "/{id}/like", method = RequestMethod.POST)
+	public ResponseEntity<Void> likeVideo(
+			@PathVariable("id") long id,
+			Principal p) {
+
+		// Check if id exists in repository
+		if (videos.exists(id) == false) {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+		
+		// Get username of current login account
+		String username = p.getName();					
+		Video v = videos.findOne(id);
+		Set<String> likesUsernames = v.getLikesUsernames();  
+		
+		// Checks if the user has already liked the video (returns 400 Bad Request)
+		if (likesUsernames.contains(username)) {
+			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+		} 
+		
+		// keep track of users have liked a video
+		v.setLikedBy(username);
+		videos.save(v);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}		
+
+//	@RequestMapping(value = URL_VIDEOS_VIDEO_LIKE, method = RequestMethod.POST)
+//	 public ResponseEntity<Void> likeVideo (
+//	   @PathVariable(PARAMETER_VIDEO_ID) long id, Principal p) {  
+//	  if (!....exists(id)){
+//	   return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+//	  }
+//	  String username = p.getName(); 
+//	  Video v = ....findOne(id);
+//	  Set<String> likesUsernames = v.getLikesUsernames();  
+//	  // Checks if the user has already liked the video.
+//	  if (....contains(username)) {
+//	   return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+//	  } 
+//	  // keep track of users have liked a video
+//	        ... 
+//	  return new ResponseEntity<Void>(HttpStatus.OK);
+//	 }
+	
+//	POST /video/{id}/unlike
+//	Allows a user to unlike a video that he/she previously liked. Returns 200 OK on success, 
+//	404 if the video is not found, and a 400 if the user has not previously liked the specified video.
+
+	
+//	GET /video/{id}/likedby
+//	Returns a list of the string usernames of the users that have liked the specified video. If the video is not found, a 404 error should be generated.	
+	
+	
 	
 //	// Controller METHOD3 - Receives POST requests
 //	// to save client's video data to a file on the server
