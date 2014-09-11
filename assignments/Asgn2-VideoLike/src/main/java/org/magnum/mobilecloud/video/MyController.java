@@ -129,7 +129,7 @@ public class MyController {
 	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH, method=RequestMethod.POST)
 	public @ResponseBody Video addVideo(@RequestBody Video v){
 		Video vhandle = videos.save(v);
-		// use returned instance from save() to get assigned ID
+		// use returned instance "vhandle" from save() to get assigned ID
 		// then add dataUrl to object so client can upload file here	
 		v.setUrl(createDataUrl(vhandle.getId()));			
 		// update repository with URL
