@@ -168,7 +168,8 @@ public class MyController {
 		}
 		
 		// Get username of current login account
-		String username = p.getName();					
+		String username = p.getName();	
+		// Get video and list of usernames that like
 		Video v = videos.findOne(id);
 		List<String> likesUsernames = v.getLikesUsernames();  
 		
@@ -199,7 +200,8 @@ public class MyController {
 		}
 		
 		// Get username of current login account
-		String username = p.getName();					
+		String username = p.getName();
+		// Get video and list of usernames that like
 		Video v = videos.findOne(id);
 		List<String> likesUsernames = v.getLikesUsernames();  
 		
@@ -215,14 +217,31 @@ public class MyController {
 		videos.save(v);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+
+	//	GET /video/{id}/likedby
+	//	Returns a list of the string usernames of the users that have liked the specified video. 
+	//	If the video is not found, a 404 error should be generated.	
+	@RequestMapping(value=VideoSvcApi.VIDEO_SVC_PATH + "/{id}/likedby", method = RequestMethod.GET)
+	public @ResponseBody List<String> getUsersWhoLikedVideo(
+			@PathVariable("id") long id,
+			HttpServletResponse response) throws IOException {
+
+		// Check if id exists in repository
+		if (videos.exists(id) == false) {
+			response.sendError(404);
+			return null;
+		}
+		
+		// Get video and list of usernames that like
+		Video v = videos.findOne(id);
+		List<String> likesUsernames = v.getLikesUsernames();  
+
+		return likesUsernames;
+	}
 	
-	
-	
-//	GET /video/{id}/likedby
-//	Returns a list of the string usernames of the users that have liked the specified video. If the video is not found, a 404 error should be generated.	
-	
-	
-	
+//	
+//  Previous code from Assignment 1 use to store/retrieve binary video files
+//
 //	// Controller METHOD3 - Receives POST requests
 //	// to save client's video data to a file on the server
 //		
