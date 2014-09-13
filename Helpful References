@@ -1,0 +1,45 @@
+Code Samples & Helpful References for Each Week Help
+
+Week 1 Additional Materials
+Interactive Tools for Learning HTTP
+
+A good way to learn HTTP is to experiment with creating requests and viewing their responses. 
+The Hurl.it app makes it easy to experiment with HTTP requests:
+An HTTP request generator: http://www.hurl.it/
+
+You can also install different browser extensions to manually construct HTTP requests:
+Postman for Chrome: 
+https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en
+RestClient for Firefox: 
+https://addons.mozilla.org/en-US/firefox/addon/restclient/
+
+More Details on the HTTP Protocol
+
+Additional details on the HTTP specification:
+The W3C HTTP specification: http://www.w3.org/Protocols/
+HTTP Made Really Easy: http://www.jmarshall.com/easy/http/
+
+More Details on REST
+
+Roy Fielding's dissertation on REST: http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm
+
+Wikipedia has a nice table summarizing how request methods are typically used in web-based REST applications: 
+http://en.wikipedia.org/wiki/Representational_state_transfer#Applied_to_web_services
+
+Week 2 Additional Materials
+Code Samples
+
+The EchoServlet code is available from GitHub: 
+https://github.com/juleswhite/mobilecloud-14/tree/master/examples/1-SimpleServlet
+
+The VideoServlet code used in Section 2 Module 1 Part 4: Video Servlet Walkthrough is available from GitHub: 
+https://github.com/juleswhite/mobilecloud-14/tree/master/examples/2-VideoServlet
+
+More Details on Servlets
+
+The official Java Servlet tutorial: 
+http://docs.oracle.com/javaee/7/tutorial/doc/servlets.htm
+
+The Google App Engine tutorial, which is based on servlets, 
+shows how to run a servlet in a platform as a service environment: 
+https://developers.google.com/appengine/docs/java/gettingstarted/introduction
